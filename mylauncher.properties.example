@@ -1,0 +1,11 @@
+# mylauncher@markbokil.com Properties File 
+
+# '#' symbol comments out a line
+# alias commands: [MS] (menu separator)
+ 
+Audacious=audacious
+Calculator=gnome-calculator
+[MS] -----------------
+System Monitor=gnome-system-monitor
+System Settings=gnome-control-center
+<< Suspend >>=dbus-send --print-reply --system --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend

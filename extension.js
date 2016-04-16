@@ -161,10 +161,6 @@ const MyLauncher = new Lang.Class({
     // build dynamic menu items
     _createMenu: function () {
 
-        // flags for executable type
-        //lg=looking glass, rt=reload theme, rg=restart gnome, sc=shell command
-        var lg,rt,rg,sc;
-
         for (let i = 0; i < this._propLines.length; i++) {
             let line = this._propLines[i];
             if (line.substring(0,1) == '#')
@@ -182,12 +178,6 @@ const MyLauncher = new Lang.Class({
             let propName = prop[0].trim(' ');
             let propVal =  prop[1].trim(' '); 
             
-            //lg=looking glass, rt=reload theme, rg=restart shell, sc=shell command
-            lg = false;
-            rt = false;
-            rg = false;
-            sc = false;
-                      
             // setup menu icons if enabled
             let gicon = Gio.icon_new_for_string("emblem-system-symbolic"); //executable
             if (this.menuIcons) {
@@ -201,32 +191,6 @@ const MyLauncher = new Lang.Class({
                     gicon = Gio.icon_new_for_string("utilities-terminal-symbolic"); //script
                 }
             } 
-
-            //determine launcher type
-            if (propVal.indexOf('[TD]') != -1) { // toggle desktop  
-                propVal = "sh " + AppDir + "/show-desktop.sh";
-                sc = true;
-            } else if (propVal.indexOf('[LG]') != -1) { //looking glass
-                propVal = "Main.createLookingGlass().toggle()";
-                lg = true;
-            } else if (propVal.indexOf('[RT]') != -1) { //reload theme
-                propVal = "Main.loadTheme()";
-                rt = true;
-            } else if (propVal.indexOf('[RG]') != -1) { //restart Shell
-                propVal = "global.reexec_self()";
-                rg = true;
-            } else if (propVal.indexOf('[MC]') != -1) { //minecraft launcher 
-                propVal = "sh " + AppDir + "/run-minecraft.sh";
-                sc = true;
-            } else if (propVal.indexOf('[CH]') != -1) { //clear history
-                propVal = "sh " + AppDir + "/clear-history.sh";
-                sc = true;
-            } else if (propVal.indexOf('[EE]') != -1) { // ?
-                propVal = "xdg-open http://markbokil.com/downloads/extensions/mylauncher/mycat.jpg";
-                sc = true;
-            } else {
-                sc = true; //assume everything else is shell command
-            }
         
             //add icons if on or use plain menuitem
             if (this.menuIcons) {
@@ -240,18 +204,7 @@ const MyLauncher = new Lang.Class({
               //     this.item.actor.tooltip_text = propVal;
               // }
 
-            if (lg) {
-                this.item.connect('activate', Lang.bind(this, function() { Main.createLookingGlass().toggle(); } ));  
-            } 
-            else if (rg) {
-                this.item.connect('activate', Lang.bind(this, function() { global.reexec_self(); } ));
-            }
-            else if (rt) {
-                this.item.connect('activate', Lang.bind(this, function() { Main.loadTheme(); } ));
-            } 
-            else if (sc) {
-                this.item.connect('activate', Lang.bind(this, function() { this._runCmd(propVal); } ));
-            }
+            this.item.connect('activate', Lang.bind(this, function() { this._runCmd(propVal); } ));
             this.menu.addMenuItem(this.item);
         }
     },
